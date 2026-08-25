@@ -1,0 +1,49 @@
+name: Deployment application
+
+on:
+  workflow_call:
+   
+    inputs:
+      environment:
+        required: true
+        type: string
+      image_tag:
+        required: true
+        type: string      
+
+permissions:
+  contents: read
+  packages: read
+  issues: write
+
+jobs:
+  
+  deploy-helm:
+        
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - name: Deploy application
+        run: |
+          echo "Deploying application to ${{ inputs.environment }} environment with image tag ${{ inputs.image_tag }}"
+         
+  scan-BackEnd:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+    
+    - name: Scan application (DAST)
+      run: |
+        echo "Scanning application BackEnd (DAST)"
+
+  scan-FrontEnd:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+    
+    - name: Scan application (DAST)
+      run: |
+        echo "Scanning application FrontEnd (DAST)"

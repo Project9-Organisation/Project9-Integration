@@ -1,0 +1,109 @@
+name: Docker build and push artifacts on Github package registry
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+    outputs:
+      image_tag:
+        value: ${{ jobs.Semantic_Release.outputs.image_tag }}      
+    
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  pull-requests: write
+  
+jobs:
+  
+  Check-variables:
+    
+    runs-on: ubuntu-latest
+        
+    steps:      
+            
+      - name: Show caller & called workflow branch
+        run: |
+          echo "Triggered by : ${{ github.event_name }}"
+          echo "Action       : ${{ github.event.action }}"
+
+          echo "github.base_ref: ${{ github.base_ref }}"
+          echo "github.head_ref: ${{ github.head_ref }}"
+
+      - name: Check environment
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          if [ "${{ inputs.environment }}" != "staging" ] && [ "${{ inputs.environment }}" != "prod" ]; then
+            echo "Invalid environment: ${{ inputs.environment }}"
+            echo "Allowed values: staging, prod"
+            exit 1
+          fi
+  
+  Semantic_Release:
+
+    needs:
+      - Check-variables
+
+    runs-on: ubuntu-latest
+    
+    outputs:
+      image_tag: "v1.0.0"  # Placeholder for the actual image tag computed by Semantic Release  
+    
+    steps:
+
+      - name: Checkout repository Application
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          path: application
+
+      - name: Checkout repository Integration
+        uses: actions/checkout@v6
+        with:
+          repository: Project9-Organisation/Project9-Integration
+          path: integration
+            
+      - name: Compute image tag with Semantic release
+        id: compute-image-tag
+        run: |
+          echo "Computing image tag ... "
+              
+  Docker_Build_BackEnd:
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Docker build for BackEnd
+        run: |
+          echo "Running Docker build for BackEnd"
+
+      - name: Scan Backend image with Trivy
+        run: |
+          echo "Scanning Backend image with Trivy"
+      
+      - name: Push Docker image
+        run: |
+          echo "Pushing Docker BackEnd image"      
+  
+  Docker_Build_FrontEnd:
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Docker build for FrontEnd
+        run: |
+          echo "Running Docker build for FrontEnd"
+
+      - name: Scan Frontend image with Trivy
+        run: |
+          echo "Scanning Frontend image with Trivy"
+      
+      - name: Push Docker image
+        run: |
+          echo "Pushing Docker FrontEnd image"
