@@ -1,0 +1,19 @@
+name: BackEnd_SonarQube
+
+on:
+  workflow_call:    
+
+jobs:
+  BackEnd_Build:
+    
+    name: Analyse BackEnd application with SonarQube
+    
+    runs-on: ubuntu-latest
+        
+    steps:
+
+      - uses: actions/checkout@v6
+
+      - name: Analyse BackEnd application with SonarQube
+        run: |
+          echo "Analyzing BackEnd application with SonarQube"

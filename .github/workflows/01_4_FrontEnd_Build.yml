@@ -1,0 +1,19 @@
+name: FrontEnd_Build
+
+on:
+  workflow_call:
+
+jobs:
+  FrontEnd_Build:
+    
+    name: Build FrontEnd application
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - uses: actions/checkout@v6
+
+      - name: Build FrontEnd application
+        run: |
+          echo "Building FrontEnd application"

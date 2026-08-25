@@ -1,0 +1,19 @@
+name: FrontEnd_SonarQube
+
+on:
+  workflow_call:    
+
+jobs:
+  FrontEnd_SonarQube:
+    
+    name: Analyse FrontEnd application with SonarQube
+    
+    runs-on: ubuntu-latest
+        
+    steps:
+      
+      - uses: actions/checkout@v6
+
+      - name: Analyse FrontEnd application with SonarQube
+        run: |
+          echo "Analyzing FrontEnd application with SonarQube"

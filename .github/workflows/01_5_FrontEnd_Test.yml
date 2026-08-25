@@ -1,0 +1,19 @@
+name: FrontEnd_Test
+
+on:
+  workflow_call:
+
+jobs:
+  FrontEnd_Test:
+    
+    name: Test FrontEnd application
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - uses: actions/checkout@v6
+
+      - name: Test FrontEnd application
+        run: |
+          echo "Testing FrontEnd application"

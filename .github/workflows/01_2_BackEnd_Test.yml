@@ -1,0 +1,19 @@
+name: BackEnd_Test
+
+on:
+  workflow_call:
+
+jobs:
+  BackEnd_Test:
+    
+    name: Test BackEnd application
+    
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v6
+          
+      - name: Test BackEnd application
+        run: |
+          echo "Testing BackEnd application"

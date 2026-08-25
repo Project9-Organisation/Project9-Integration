@@ -38,62 +38,59 @@ jobs:
     uses: ./.github/workflows/01_1_BackEnd_Build.yml
     secrets: inherit
     
-  # BackEnd_Test:    
-  #   needs:
-  #     - BackEnd_Build
-  #   uses: ./.github/workflows/01_2_BackEnd_Test.yml
-  #   secrets: inherit
+  BackEnd_Test:    
+    needs:
+      - BackEnd_Build
+    uses: ./.github/workflows/01_2_BackEnd_Test.yml
+    secrets: inherit
 
-  # BackEnd_SonarQube:    
-  #   if: github.ref_name == 'develop'
-  #   needs:
-  #     - BackEnd_Test
-  #   uses: ./.github/workflows/01_3_BackEnd_SonarQube.yml
-  #   secrets: inherit
+  BackEnd_SonarQube:    
+    needs:
+      - BackEnd_Test
+    uses: ./.github/workflows/01_3_BackEnd_SonarQube.yml
+    secrets: inherit
     
-  # FrontEnd_Build:    
-  #   needs:
-  #     - Check-variables
-  #   uses: ./.github/workflows/01_4_FrontEnd_Build.yml
-  #   secrets: inherit
+  FrontEnd_Build:    
+    needs:
+      - Check-variables
+    uses: ./.github/workflows/01_4_FrontEnd_Build.yml
+    secrets: inherit
 
-  # FrontEnd_Test:    
-  #   needs:
-  #     - FrontEnd_Build
-  #   uses: ./.github/workflows/01_5_FrontEnd_Test.yml
-  #   secrets: inherit
+  FrontEnd_Test:    
+    needs:
+      - FrontEnd_Build
+    uses: ./.github/workflows/01_5_FrontEnd_Test.yml
+    secrets: inherit
 
-  # FrontEnd_SonarQube:    
-  #   if: github.ref_name == 'develop'    
-  #   needs:
-  #     - FrontEnd_Test
-  #   uses: ./.github/workflows/01_6_FrontEnd_SonarQube.yml
-  #   secrets: inherit
+  FrontEnd_SonarQube:    
+    needs:
+      - FrontEnd_Test
+    uses: ./.github/workflows/01_6_FrontEnd_SonarQube.yml
+    secrets: inherit
 
-  # Snyk_Scan:
-  #   if: false    
-  #   needs:
-  #     - BackEnd_Build
-  #     - FrontEnd_Build
-  #   uses: ./.github/workflows/01_7_Snyk.yml
-  #   secrets: inherit
+  Snyk_Scan:    
+    needs:
+      - BackEnd_Build
+      - FrontEnd_Build
+    uses: ./.github/workflows/01_7_Snyk.yml
+    secrets: inherit
 
-  # CI_Status:
+  CI_Status:
     
-  #   name: CI Status
+    name: CI Status
     
-  #   runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  #   needs:
-  #     - BackEnd_Build
-  #     - BackEnd_Test
-  #     - FrontEnd_Build
-  #     - FrontEnd_Test
-  #     - BackEnd_SonarQube
-  #     - FrontEnd_SonarQube
-  #     - Snyk_Scan
+    needs:
+      - BackEnd_Build
+      - BackEnd_Test
+      - FrontEnd_Build
+      - FrontEnd_Test
+      - BackEnd_SonarQube
+      - FrontEnd_SonarQube
+      - Snyk_Scan
 
-  #   if: always()
+    if: always()
 
-  #   steps:
-  #     - run: echo "All checks passed"
+    steps:
+      - run: echo "All checks passed"

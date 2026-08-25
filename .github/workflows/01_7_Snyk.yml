@@ -1,0 +1,32 @@
+name: Snyk_Scan
+
+on:
+  workflow_call:    
+
+jobs:
+  
+  Snyk_BackEnd:
+    name: Snyk BackEnd Dependencies
+    
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v6
+          
+      - name: Snyk BackEnd Dependencies
+        run: |
+          echo "Scanning BackEnd dependencies"
+
+  Snyk_FrontEnd:
+    name: Snyk FrontEnd Dependencies
+    
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v6
+          
+      - name: Snyk FrontEnd Dependencies
+        run: |
+          echo "Scanning FrontEnd dependencies"
