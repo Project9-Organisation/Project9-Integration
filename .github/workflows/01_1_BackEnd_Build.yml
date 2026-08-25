@@ -1,0 +1,19 @@
+name: BackEnd_Build
+
+on:
+  workflow_call:    
+
+jobs:
+  BackEnd_Build:
+    
+    name: Build BackEnd application
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+
+      - uses: actions/checkout@v6
+          
+      - name: Build BackEnd application
+        run: |
+          echo "Building BackEnd application"
