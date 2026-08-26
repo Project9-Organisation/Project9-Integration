@@ -6,7 +6,7 @@ on:
 jobs:
   
   Snyk_BackEnd:
-    name: Snyk BackEnd Dependencies
+    name: SAST BackEnd
     
     runs-on: ubuntu-latest
 
@@ -14,12 +14,12 @@ jobs:
 
       - uses: actions/checkout@v6
           
-      - name: Snyk BackEnd Dependencies
+      - name: SAST BackEnd
         run: |
           echo "Scanning BackEnd dependencies"
 
   Snyk_FrontEnd:
-    name: Snyk FrontEnd Dependencies
+    name: SAST FrontEnd
     
     runs-on: ubuntu-latest
 
@@ -27,6 +27,6 @@ jobs:
 
       - uses: actions/checkout@v6
           
-      - name: Snyk FrontEnd Dependencies
+      - name: SAST FrontEnd
         run: |
           echo "Scanning FrontEnd dependencies"

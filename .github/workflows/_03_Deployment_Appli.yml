@@ -19,6 +19,8 @@ permissions:
 jobs:
   
   deploy-helm:
+
+    name: Deploy application
         
     runs-on: ubuntu-latest
 
@@ -29,6 +31,8 @@ jobs:
           echo "Deploying application to ${{ inputs.environment }} environment with image tag ${{ inputs.image_tag }}"
          
   scan-BackEnd:
+
+    name: DAST - Scan BackEnd
   
     runs-on: ubuntu-latest
     
@@ -36,11 +40,13 @@ jobs:
     
     steps:
     
-    - name: Scan application (DAST)
+    - name: DAST - Scan BackEnd
       run: |
         echo "Scanning application BackEnd (DAST)"
 
   scan-FrontEnd:
+
+    name: DAST - Scan FrontEnd
       
     runs-on: ubuntu-latest
 
@@ -48,6 +54,6 @@ jobs:
 
     steps:
     
-    - name: Scan application (DAST)
+    - name: DAST - Scan FrontEnd
       run: |
         echo "Scanning application FrontEnd (DAST)"

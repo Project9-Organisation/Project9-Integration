@@ -26,11 +26,7 @@ jobs:
             
       - name: Show caller & called workflow branch
         run: |
-          echo "Triggered by : ${{ github.event_name }}"
-          echo "Action       : ${{ github.event.action }}"
-
-          echo "github.base_ref: ${{ github.base_ref }}"
-          echo "github.head_ref: ${{ github.head_ref }}"
+          echo "Triggered by : ${{ github.event_name }}"          
 
       - name: Check environment
         run: |
