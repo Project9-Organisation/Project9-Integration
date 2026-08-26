@@ -42,17 +42,17 @@ flowchart TD
     
     AA --> AB[terraform plan]
     AB --> AC[terraform apply]
-    AC --> AD[AWS Services<br/>VPC, Subnets, EKS, ALB, IAM ...]
-    AD --> AE[Création du cluster EKS]    
-    AE --> AF[Installation des Add-ons EKS Rollout...]    
+    AC --> AD[Cloud Services<br/>VPC, Subnets, K8S, ALB, IAM ...]
+    AD --> AE[Création du cluster K8S]    
+    AE --> AF[Installation des Add-ons Rollout...]    
     AF --> AG[Installation du monitoring]
-    AG --> AH[Infrastructure AWS créée / modifiée]
+    AG --> AH[Infrastructure Cloud créée / modifiée]
 
     DA --> DB[terraform destroy<br/>tfplan]    
-    DB --> DC[Suppression des Add-ons EKS Rollout...]
+    DB --> DC[Suppression des Add-ons Rollout...]
     DC --> DD[Suppression du monitoring]
-    DD --> DE[Suppression AWS Services<br/>VPC, Subnets, EKS, ALB, IAM ...]
-    DE --> DF[Suprression du cluster EKS]    
-    DF --> DG[Infrastructure AWS supprimée]
+    DD --> DE[Suppression Cloud Services<br/>VPC, Subnets, K8S, ALB, IAM ...]
+    DE --> DF[Suppression du cluster K8S]    
+    DF --> DG[Infrastructure Cloud supprimée]
     
 ```

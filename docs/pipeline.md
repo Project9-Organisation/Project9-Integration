@@ -1,72 +1,102 @@
 ## Structure du pipeline CI/CD
 
-Le pipeline automatise la compilation, les tests, l’analyse de qualité, la construction et l’analyse de sécurité des images Docker, puis leur déploiement sur les environnements AWS EKS de staging et de production. Les résultats des déploiements alimentent également les métriques DORA exposées dans Grafana.
+Le pipeline automatise la compilation, les tests, l’analyse de qualité, la construction et l’analyse de sécurité des images Docker, puis leur déploiement sur les environnements d'intégration (staging) et de production. Les résultats des déploiements alimentent également les métriques DORA.
 
 Aucune intervention manuelle n'est nécessaire (hormis la création / validation de pull-request)
 
-
 ```mermaid
-flowchart TD
 
-    A[Push ou Pull Request] --> B[Déclenchement GitHub Actions]
+    flowchart TD
 
-    B --> C{Branche}
+    %% =========================
+    %% Déclenchement
+    %% =========================
 
-    C -->|Feature branch| D[Pipeline CI]
-    C -->|develop| E[Pipeline CI + Déploiement Staging]
-    C -->|main| F[Pipeline CI + Release + Déploiement Production]
+    A["push<br/>pull-request<br/>merge pull-request"]
+    --> B["🔒 Sécurité<br/>pre-hook<br/>Détection secrets"]
 
-    subgraph CI["Intégration continue"]
-        D1[Build Back-End / Front-End<br/>Gradle / Angular]
-        D2[Tests Back-End / Front-End <br/>JUnit / Karma]
-        D3[Qualité Back-End / Front-End <br/>SonarQube]
-        D4[SAST Back-End / Front-End<br/>Snyk + Dependabot]
-        D5[Contrôle du statut global]
-        
-        D1 --> D2 
-        D1 --> D4
-        D2 --> D3
-        D4 --> D5        
-        D3 --> D5
+    B --> C["Déclenchement<br/>GitHub Actions"]
+
+
+    %% =========================
+    %% PIPELINE CI
+    %% =========================
+
+    subgraph CI["Pipeline CI"]
+
+        direction TB
+
+        C --> FE["Build Front-End"]
+        C --> BE["Build Back-End"]
+
+        FE --> FES["🔒 Sécurité / Qualité<br/>SAST / CSA"]
+        FE --> FET["Tests unitaires<br/>Front-End"]
+
+        BE --> BET["Tests unitaires<br/>Back-End"]
+        BE --> BES["🔒 Sécurité / Qualité<br/>SAST / CSA"]
+
+        FES --> QG{"Quality<br/>Gates"}
+        FET --> QG
+        BET --> QG
+        BES --> QG
+
+        QG -->|❌ Échec| CIERR["Pipeline bloqué<br/>Erreur"]
+        QG -->|✅ Succès| BRANCH{"Branche ?"}
+
+        BRANCH -->|feature branch| STOP["Arrêt du pipeline<br/>Feedback"]
+    end
+
+
+    %% =========================
+    %% PIPELINE RELEASE
+    %% =========================
+
+    BRANCH -->|develop / main| TAG
+
+    subgraph RELEASE["Pipeline Release"]
+
+        direction TB
+
+        TAG["Calcul image tag<br/>semantic-release<br/>ex: v1.1.0"]
+
+        TAG --> DOCKER["Docker build<br/>Back-End<br/>Front-End"]
+
+        DOCKER --> CS["🔒 Sécurité<br/>Scan CS (Conteneur)"]
+
+        CS -->|❌ Échec| RELERR["Pipeline bloqué<br/>Erreur"]
+
+        CS -->|✅ Succès| PUSH["Push artefacts<br/>(GH Registry)"]
 
     end
 
-    D --> D1    
-    E --> D1
-    F --> D1
 
-    D5 --> G{Pipeline valide ?}
+    %% =========================
+    %% PIPELINE CD
+    %% =========================
 
-    G -->|Non| H[Arrêt du pipeline]
-    G -->|Oui - develop| X[Création du tag de version<br/>develop-12ad577]
-    G -->|Oui - main| J[Semantic Release<br/>v1.1.0]
+    PUSH --> ENV{"Branche ?"}
 
-    J --> L[Scan de sécurité Trivy]
-    X --> L
-    L --> M{Vulnérabilités bloquantes ?}
+    subgraph CD["Pipeline CD"]
 
-    M -->|Oui| H
-    M -->|Non| N[Publication des images dans GitHub Packages]
+        direction TB
 
-    N --> O{Environnement cible}
+        ENV -->|develop| INT["Déploiement<br/><b>INTEGRATION</b>"]
 
-    O -->|develop| P[Déploiement Staging]
-    O -->|main| Q[Déploiement Production]
+        INT --> DAST_INT["🔒 Sécurité<br/>Scan DAST"]
 
-    subgraph CD["Déploiement continu"]
-        P --> P1[Mise à jour du contexte EKS Staging]
-        P1 --> P2[Déploiement Helm<br/>microcrm-staging]
-        P2 --> P3[DAST ZAProxy]
+        DAST_INT -->|❌ Échec| CDERR["Pipeline bloqué<br/>Erreur"]
 
-        Q --> Q1[Mise à jour du contexte EKS Production]
-        Q1 --> Q2[Déploiement Helm<br/>microcrm-prod]
-        Q2 --> Q3[DAST ZAProxy]
+
+        ENV -->|main| PROD["Déploiement progressif<br/><b>PRODUCTION</b>"]
+
+        PROD --> DAST_PROD["🔒 Sécurité<br/>Scan DAST"]
+
+        DAST_PROD -->|❌ Échec| ROLLBACK["Rollback"]
+
+        DAST_PROD -->|✅ Succès| FIN["SUITE / FIN<br/>Déploiement progressif"]
+
+        FIN --> VERSION["vX.Y.Z ✅"]
+
     end
 
-    Q3 --> R[Envoi des métriques DORA]
-    P3 --> T
-
-    R --> S[Pushgateway]
-    S --> T[Prometheus]
-    T --> U[Grafana]
 ```
