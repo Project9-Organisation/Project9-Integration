@@ -1,2 +1,5 @@
-# Project9-Integration
-Dépôt pour le code du pipeline CI/CD GlossaPro
+# Projet GlossaPro
+
+## Documentation complète
+
+👉 https://project9-organisation.github.io/Project9-Integration/

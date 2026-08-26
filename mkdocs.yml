@@ -1,0 +1,27 @@
+site_name: Project9 GlossaPro
+site_url: https://github.com/olivierPflieger/Project9/
+theme:
+  name: material
+  features:
+    - content.code.copy
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Passer en mode sombre
+
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Passer en mode clair
+nav:
+  - Accueil: index.md
+  - Pipeline: pipeline.md
+  - Pipeline infra: pipeline-infra.md
+  
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
