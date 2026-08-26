@@ -1,0 +1,92 @@
+name: Deployment infrastructure
+
+on:
+  workflow_call:
+    
+    # secrets:
+        # AWS credentials are required to deploy the infrastructure
+        # AWS_ACCESS_KEY_ID:
+        #   required: true
+        # AWS_SECRET_ACCESS_KEY:
+        #   required: true
+      
+    inputs:
+      action:
+        required: true
+        type: string   
+      environment:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+
+  Check-variables:
+    
+    runs-on: ubuntu-latest
+    
+    steps:      
+      
+      - name: Check action
+        run: |
+          echo "Action: ${{ inputs.action }}"
+          if [ "${{ inputs.action }}" != "plan" ] \
+            && [ "${{ inputs.action }}" != "apply" ] \
+            && [ "${{ inputs.action }}" != "plan-destroy" ] \
+            && [ "${{ inputs.action }}" != "destroy" ]; then
+            echo "Invalid action: ${{ inputs.action }}"
+            echo "Allowed values: plan, apply, plan-destroy, destroy"
+            exit 1
+          fi
+
+      - name: Check environment
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          if [ "${{ inputs.environment }}" != "staging" ] && [ "${{ inputs.environment }}" != "prod" ]; then
+            echo "Invalid environment: ${{ inputs.environment }}"
+            echo "Allowed values: staging, prod"
+            exit 1
+          fi
+
+  create-infra:
+
+    needs: Check-variables    
+    if: inputs.action == 'plan' || inputs.action == 'apply'
+    
+    runs-on: ubuntu-latest
+    
+    name : Create infrastructure
+    
+    steps:
+      - name: Create infrastructure
+        run: |
+          echo "Creating infrastructure for environment: ${{ inputs.environment }}"
+  
+  plan-destroy:
+
+    needs: Check-variables
+    if: inputs.action == 'plan-destroy'
+
+    runs-on: ubuntu-latest
+
+    name : Plan destroy infrastructure
+    
+    steps:
+      - name: Plan destroy infrastructure
+        run: |
+          echo "Planning destroy infrastructure for environment: ${{ inputs.environment }}"
+  
+  destroy-infra:
+    
+    if: inputs.action == 'destroy'
+
+    runs-on: ubuntu-latest
+    
+    name : Destroy infrastructure
+    
+    steps:
+      - name: Checkout integration repository
+        run: |
+          echo "Destroying infrastructure for environment: ${{ inputs.environment }}"
