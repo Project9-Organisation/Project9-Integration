@@ -42,10 +42,10 @@ flowchart TD
     E -->|apply| AA[terraform<br/>init, fmt, validate]
     E -->|destroy| DA[terraform<br/>init, fmt, validate]
     
-    F --> FA[Rapport des modifications à effectuer]
+    F --> FA[Génération d'un rapport des modifications à effectuer]
 
     AA --> AC[terraform apply]
-    AC --> AE[Création de l'infrastructure Cloud]
+    AC --> AE[Création/modification de l'infrastructure Cloud]
     
     DA --> DB[terraform destroy]    
     DB --> DC[Suppression de l'infrastructure Cloud]
