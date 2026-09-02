@@ -1,9 +1,9 @@
-## Structure du pipeline Infrastructure
+## Guide d'utilisation du pipeline Infrastructure
 
 L'infrastructure des environnements est provisionnée à l'aide de Terraform via un workflow GitHub Actions dédié, déclenché manuellement.
-Le workflow permet de crééer l’infra, mais aussi de modifier l’infra existante, ainsi que de détruire l’infra
+Le workflow permet de crééer l’infrastructure, mais aussi de modifier ou détruire l’infrastructure existante.
 
-Pour lancer un job d'infra :
+Pour lancer un job d'infrastructure :
 
 - Ouvrir le dépôt GitHub et accéder à l'onglet Actions
 - Sélectionner le workflow "Trigger infrastructure deployment"
@@ -22,6 +22,8 @@ Choix de l'environnement
 
 - Cliquer sur "Run workflow"
 
+## Schéma du pipeline d'infrastructure
+
 
 ```mermaid
 flowchart TD
@@ -36,23 +38,16 @@ flowchart TD
     C --> E{Choix de l'action}
     D --> E
 
-    E -->|plan| F[Terraform<br/>init, fmt, validate]
-    E -->|apply| AA[Terraform<br/>init, fmt, validate]
-    E -->|destroy| DA[Terraform<br/>init, fmt, validate]
+    E -->|plan| F[terraform<br/>init, fmt, validate]
+    E -->|apply| AA[terraform<br/>init, fmt, validate]
+    E -->|destroy| DA[terraform<br/>init, fmt, validate]
     
-    AA --> AB[terraform plan]
-    AB --> AC[terraform apply]
-    AC --> AD[Cloud Services<br/>VPC, Subnets, K8S, ALB, IAM ...]
-    AD --> AE[Création du cluster K8S]    
-    AE --> AF[Installation des Add-ons Rollout...]    
-    AF --> AG[Installation du monitoring]
-    AG --> AH[Infrastructure Cloud créée / modifiée]
+    F --> FA[Rapport des modifications à effectuer]
 
-    DA --> DB[terraform destroy<br/>tfplan]    
-    DB --> DC[Suppression des Add-ons Rollout...]
-    DC --> DD[Suppression du monitoring]
-    DD --> DE[Suppression Cloud Services<br/>VPC, Subnets, K8S, ALB, IAM ...]
-    DE --> DF[Suppression du cluster K8S]    
-    DF --> DG[Infrastructure Cloud supprimée]
+    AA --> AC[terraform apply]
+    AC --> AE[Création de l'infrastructure Cloud]
+    
+    DA --> DB[terraform destroy]    
+    DB --> DC[Suppression de l'infrastructure Cloud]
     
 ```

@@ -8,5 +8,7 @@
 
 ## Documentation
 
-- [Pipeline CI/CD](pipeline.md)
+- [Pipeline CI](pipeline-ci.md)
+- [Pipeline Release/CD](pipeline-cd.md)
+- [Pipeline CI/CD complet](pipeline.md)
 - [Pipeline Infrastructure](pipeline-infra.md)
