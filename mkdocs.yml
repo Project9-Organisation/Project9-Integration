@@ -16,7 +16,8 @@ theme:
         name: Passer en mode clair
 nav:
   - Accueil: index.md
-  - Pipeline: pipeline.md
+  - Pipeline CI: pipeline-ci.md
+  - Pipeline Release/CD: pipeline-cd.md
   - Pipeline infra: pipeline-infra.md
   
 markdown_extensions:

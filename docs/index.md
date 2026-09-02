@@ -1,14 +1,13 @@
 # Projet GlossaPro
 
-## Stack Technique
+## Stack Technique de l'application GlossaFlow
 
 ![Front-End](https://img.shields.io/badge/Front--End-React.js-61DAFB?logo=react&logoColor=white)
 ![Back-End](https://img.shields.io/badge/Back--End-Node.js-339933?logo=nodedotjs&logoColor=white)
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 
-## Documentation
+## Pipeline CI/CD
 
 - [Pipeline CI](pipeline-ci.md)
 - [Pipeline Release/CD](pipeline-cd.md)
-- [Pipeline CI/CD complet](pipeline.md)
 - [Pipeline Infrastructure](pipeline-infra.md)

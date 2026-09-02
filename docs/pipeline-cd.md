@@ -23,14 +23,10 @@ En tant que développeur :
 - Si la branche est develop :
     - L’application est déployée automatiquement sur l’environnement d’<b>INTÉGRATION</b>
     - Un scan de sécurité DAST est exécuté sur l’application déployée
-    - Si le scan DAST échoue ❌, le pipeline est bloqué et le résultat est consultable dans GitHub Actions
     - Si les contrôles passent ✅, la nouvelle version est considérée comme déployée et disponible en intégration
 
 - Si la branche est main :
-    - L’application est déployée progressivement sur l’environnement de <b>PRODUCTION</b>
-    - Un scan de sécurité DAST est exécuté sur la nouvelle version
-    - Si le scan DAST échoue ❌, un rollback est déclenché afin de revenir à la dernière version fonctionnelle
-    - Si le scan DAST réussit ✅, le déploiement progressif se poursuit jusqu’au déploiement complet de la nouvelle version
+    - L’application est déployée progressivement sur l’environnement de <b>PRODUCTION</b>    
 
 ## Schéma du pipeline Release/CD
 
@@ -81,19 +77,10 @@ En tant que développeur :
         ENV -->|develop| INT["Déploiement<br/><b>INTEGRATION</b>"]
 
         INT --> DAST_INT["🔒 Sécurité<br/>Scan DAST"]
-
-        DAST_INT -->|❌ Échec| CDERR["Pipeline bloqué<br/>Erreur"]
-
-
+        
         ENV -->|main| PROD["Déploiement progressif<br/><b>PRODUCTION</b>"]
 
-        PROD --> DAST_PROD["🔒 Sécurité<br/>Scan DAST"]
-
-        DAST_PROD -->|❌ Échec| ROLLBACK["Rollback"]
-
-        DAST_PROD -->|✅ Succès| FIN["SUITE / FIN<br/>Déploiement progressif"]
-
-        FIN --> VERSION["vX.Y.Z ✅"]
+        PROD --> VERSION["vX.Y.Z ✅"]
 
     end
 
